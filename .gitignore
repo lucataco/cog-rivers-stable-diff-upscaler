@@ -1,0 +1,12 @@
+__pycache__
+.cog
+checkpoints/
+
+script/__pycache__
+
+latent-diffusion/
+taming/
+taming-transformers/
+
+config_laion_text_cond_latent_upscaler_2.json
+laion_text_cond_latent_upscaler_2_1_00470000_slim.pth

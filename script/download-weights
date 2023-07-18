@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+import os
+import sys
+import shutil
+import huggingface_hub
+from transformers import CLIPTextModel
+
+MODEL_CACHE = "checkpoints/"
+
+# append project directory to path so predict.py can be imported
+sys.path.append('.')
+
+# Git clone relevant repos
+os.system("git clone https://github.com/CompVis/taming-transformers")
+os.system("git clone https://github.com/CompVis/latent-diffusion")
+
+# Create checkpoints folder if it does not exist
+if os.path.exists(MODEL_CACHE):
+    shutil.rmtree(MODEL_CACHE)
+os.makedirs(MODEL_CACHE, exist_ok=True)
+
+# Download stable-diffusion-vae model
+vae_560k_model_path = huggingface_hub.hf_hub_download("stabilityai/sd-vae-ft-ema-original", "vae-ft-ema-560000-ema-pruned.ckpt", cache_dir=MODEL_CACHE)
+# Download clip model
+clip_model = CLIPTextModel.from_pretrained("openai/clip-vit-large-patch14", cache_dir=MODEL_CACHE)
+
+# Get Laion model and config if they dont exist
+if not os.path.exists("config_laion_text_cond_latent_upscaler_2.json"):
+    os.system("wget https://models.rivershavewings.workers.dev/config_laion_text_cond_latent_upscaler_2.json")
+if not os.path.exists("laion_text_cond_latent_upscaler_2_1_00470000_slim.pth"):
+    os.system("wget https://models.rivershavewings.workers.dev/laion_text_cond_latent_upscaler_2_1_00470000_slim.pth")
